@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\ProdukResource\Pages;
+namespace App\Filament\Resources\BahanPokokResource\Pages;
 
-use App\Filament\Resources\ProdukResource;
+use App\Filament\Resources\BahanPokokResource;
 use Filament\Actions;
-use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
 
-class ListProduks extends ListRecords
+class ListBahanPokoks extends ListRecords
 {
-    protected static string $resource = ProdukResource::class;
+    protected static string $resource = BahanPokokResource::class;
 
     protected function getRedirectUrl(): string
     {

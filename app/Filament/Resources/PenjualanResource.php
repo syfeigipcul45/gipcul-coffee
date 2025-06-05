@@ -15,14 +15,14 @@ class PenjualanResource extends Resource
     protected static ?string $model = Penjualan::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 1;
     protected static ?string $navigationGroup = 'Sales';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                
+
             ]);
     }
 

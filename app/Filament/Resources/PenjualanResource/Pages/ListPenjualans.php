@@ -10,6 +10,11 @@ class ListPenjualans extends ListRecords
 {
     protected static string $resource = PenjualanResource::class;
 
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+    
     protected function getHeaderActions(): array
     {
         return [
