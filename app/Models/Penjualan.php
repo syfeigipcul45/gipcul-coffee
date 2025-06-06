@@ -15,6 +15,16 @@ class Penjualan extends Model
         'tanggal_penjualan',
     ];
 
+    public function detailPenjualans()
+    {
+        return $this->hasMany(DetailPenjualan::class);
+    }
+
+    public function detailPenjualansCount()
+    {
+        return $this->detailPenjualans()->count();
+    }
+
     public function produk()
     {
         return $this->belongsTo(Produk::class, 'produk_id');
