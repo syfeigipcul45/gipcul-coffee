@@ -9,6 +9,7 @@ use Filament\Resources\Pages\ListRecords;
 class ListBahanPokoks extends ListRecords
 {
     protected static string $resource = BahanPokokResource::class;
+    protected static ?string $title = 'Daftar Bahan Pokok';
 
     protected function getRedirectUrl(): string
     {

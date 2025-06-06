@@ -9,6 +9,7 @@ use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\RawJs;
 use Filament\Tables;
@@ -22,6 +23,7 @@ class ProdukResource extends Resource
 {
     protected static ?string $model = Produk::class;
 
+    protected static ?string $navigationLabel = 'Produk';
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
     protected static ?int $navigationSort = 2;
     protected static ?string $navigationGroup = 'Inventory';
@@ -68,6 +70,13 @@ class ProdukResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->successNotification(
+                        Notification::make()
+                            ->success()
+                            ->title('Produk dihapus')
+                            ->body('Produk telah berhasil dihapus.')
+                    ),
             ]);
     }
 

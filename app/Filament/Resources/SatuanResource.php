@@ -2,24 +2,21 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\BahanPokokResource\Pages;
-use App\Filament\Resources\BahanPokokResource\RelationManagers;
-use App\Models\BahanPokok;
+use App\Filament\Resources\SatuanResource\Pages;
+use App\Filament\Resources\SatuanResource\RelationManagers;
+use App\Models\Satuan;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class BahanPokokResource extends Resource
+class SatuanResource extends Resource
 {
-    protected static ?string $model = BahanPokok::class;
-
-    protected static ?string $navigationLabel = 'Bahan Pokok';
+    protected static ?string $model = Satuan::class;
+    protected static ?string $navigationLabel = 'Satuan';
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
     protected static ?string $navigationGroup = 'Inventory';
     protected static ?int $navigationSort = 2;
@@ -28,22 +25,23 @@ class BahanPokokResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nama_bahan')
+                Forms\Components\TextInput::make('nama_satuan')
                     ->required()
                     ->maxLength(255)
-                    ->label('Nama Bahan Pokok'),
-            ])->columns(1);
+                    ->label('Nama Satuan'),
+            ])->columns(1)
+            ;
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('index')
+                Tables\Columns\TextColumn::make('index')
                     ->label('No.')
                     ->rowIndex(),
-                TextColumn::make('nama_bahan')
-                    ->label('Nama Bahan Pokok')
+                Tables\Columns\TextColumn::make('nama_satuan')
+                    ->label('Nama Satuan')
                     ->sortable()
                     ->searchable(),
             ])
@@ -54,11 +52,16 @@ class BahanPokokResource extends Resource
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
                     ->successNotification(
-                        Notification::make()
+                        \Filament\Notifications\Notification::make()
                             ->success()
-                            ->title('Bahan pokok dihapus')
-                            ->body('Bahan pokok telah berhasil dihapus.')
+                            ->title('Satuan dihapus')
+                            ->body('Satuan telah berhasil dihapus.')
                     ),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
             ]);
     }
 
@@ -72,9 +75,9 @@ class BahanPokokResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListBahanPokoks::route('/'),
-            'create' => Pages\CreateBahanPokok::route('/create'),
-            'edit' => Pages\EditBahanPokok::route('/{record}/edit'),
+            'index' => Pages\ListSatuans::route('/'),
+            'create' => Pages\CreateSatuan::route('/create'),
+            'edit' => Pages\EditSatuan::route('/{record}/edit'),
         ];
     }
 }

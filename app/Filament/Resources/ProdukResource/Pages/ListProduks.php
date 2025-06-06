@@ -10,6 +10,7 @@ use Filament\Resources\Pages\ListRecords;
 class ListProduks extends ListRecords
 {
     protected static string $resource = ProdukResource::class;
+    protected static ?string $title = 'Daftar Produk';
 
     protected function getRedirectUrl(): string
     {
