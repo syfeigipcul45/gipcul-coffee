@@ -50,6 +50,14 @@ class PenjualanResource extends Resource
                             ->readonly()
                             ->dehydrated(fn($state) => !is_null($state)) // Hanya simpan jika tidak null
                             ->placeholder('Masukkan total harga'),
+                        Select::make('jenis_pembayaran')
+                            ->label('Jenis Pembayaran')
+                            ->options([
+                                'cash' => 'Cash',
+                                'qris' => 'QRIS',
+                                'transfer' => 'Transfer',
+                            ])
+                            ->placeholder('Pilih jenis pembayaran')
                     ]),
                 Section::make('Detail Penjualan')
                     ->schema([

@@ -9,10 +9,10 @@ class Penjualan extends Model
     protected $table = 'penjualans';
 
     protected $fillable = [
-        'produk_id',
-        'jumlah',
+        'nama_pembeli',
+        'tanggal_beli',
         'total_harga',
-        'tanggal_penjualan',
+        'jenis_pembayaran',
     ];
 
     public function detailPenjualans()

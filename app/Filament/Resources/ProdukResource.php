@@ -3,21 +3,20 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProdukResource\Pages;
-use App\Filament\Resources\ProdukResource\RelationManagers;
 use App\Models\Produk;
-use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
-use Filament\Support\RawJs;
 use Filament\Tables;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ProdukResource extends Resource
 {
@@ -32,6 +31,9 @@ class ProdukResource extends Resource
     {
         return $form
             ->schema([
+                SpatieMediaLibraryFileUpload::make('gambar')
+                    ->collection('produk')
+                    ->label('Foto Produk'),
                 TextInput::make('nama_produk')
                     ->required()
                     ->maxLength(255)
@@ -42,7 +44,19 @@ class ProdukResource extends Resource
                     ->minValue(0)
                     ->maxValue(1000000000)
                     ->prefix('Rp')
-                    ->placeholder('Masukkan harga produk')
+                    ->placeholder('Masukkan harga produk'),
+                    Select::make('kategori')
+                    ->options([
+                        'kopi' => 'Kopi',
+                        'non_kopi' => 'Non Kopi',
+                    ])
+                    ->label('Kategori Minuman')
+                    ->placeholder('Pilih kategori produk'),
+                RichEditor::make('deskripsi')
+                    ->disableGrammarly()
+                    ->label('Deskripsi Produk')
+                    ->columnSpanFull()
+                    ->placeholder('Masukkan deskripsi produk')
             ]);
     }
 
@@ -53,6 +67,10 @@ class ProdukResource extends Resource
                 TextColumn::make('index')
                     ->label('No.')
                     ->rowIndex(),
+                SpatieMediaLibraryImageColumn::make('gambar')
+                    ->disk('public')->visibility('public')
+                    ->collection('produk')
+                    ->label('Foto Produk'),
                 TextColumn::make('nama_produk')
                     ->sortable()
                     ->searchable()
@@ -61,7 +79,11 @@ class ProdukResource extends Resource
                     ->sortable()
                     ->searchable()
                     ->label('Harga (Rp)')
-                    ->formatStateUsing(fn($state) => number_format($state, 0, ',', '.'))
+                    ->formatStateUsing(fn($state) => number_format($state, 0, ',', '.')),
+                TextColumn::make('kategori'),
+                TextColumn::make('deskripsi')
+                    ->limit(50)
+                    ->label('Deskripsi')
             ])->filters([
                 //
             ])
