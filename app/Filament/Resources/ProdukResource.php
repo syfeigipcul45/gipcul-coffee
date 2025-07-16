@@ -16,6 +16,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class ProdukResource extends Resource
@@ -45,7 +46,7 @@ class ProdukResource extends Resource
                     ->maxValue(1000000000)
                     ->prefix('Rp')
                     ->placeholder('Masukkan harga produk'),
-                    Select::make('kategori')
+                Select::make('kategori')
                     ->options([
                         'kopi' => 'Kopi',
                         'non_kopi' => 'Non Kopi',
@@ -85,10 +86,14 @@ class ProdukResource extends Resource
                     ->limit(50)
                     ->label('Deskripsi')
             ])->filters([
-                //
-            ])
-            ->filters([
-                //
+                SelectFilter::make('kategori')
+                    ->label('Filter Kategori')
+                    ->options([
+                        'kopi' => 'Kopi',
+                        'non_kopi' => 'Non Kopi',
+                    ])
+                    ->searchable() // Opsional: jika ingin bisa mencari di dropdown
+                    ->placeholder('Pilih Kategori'), // Opsional: teks placeholder
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

@@ -20,10 +20,10 @@ class Penjualan extends Model
         return $this->hasMany(DetailPenjualan::class);
     }
 
-    public function detailPenjualansCount()
-    {
-        return $this->detailPenjualans()->count();
-    }
+    // public function detailPenjualansCount()
+    // {
+    //     return $this->detailPenjualans()->sum('qty');
+    // }
 
     public function produk()
     {
