@@ -48,30 +48,78 @@ class ResepResource extends Resource
                             ->required()
                             ->columnSpanFull()
                             ->placeholder('Masukkan deskripsi resep'),
+                        TextInput::make('hpp')
+                            ->label('HPP (Harga Pokok Penjualan)')
+                            ->numeric()
+                            ->prefix('Rp ')
+                            ->readonly()
+                            // Only dehydrate if not null to save it. If you always want to save, remove this.
+                            // Consider if total_harga should always be calculated from detailPembelians
+                            // and not directly stored if you want to avoid discrepancies.
+                            ->dehydrated(fn($state) => !is_null($state))
+                            ->placeholder('Masukkan total harga'),
                     ]),
 
                 Section::make('Bahan-bahan Resep')
                     ->schema([
                         Repeater::make('detailReseps')
                             ->relationship() // Gunakan relationship
+                            ->live()
+                            ->afterStateUpdated(function ($state, $set) {
+                                // Ensure $state is a collection and calculate sum
+                                $total = collect($state)->sum(fn($item) => (float)($item['harga_pokok'] ?? 0));
+                                $set('hpp', $total);
+                            })
                             ->schema([
                                 Select::make('bahan_id')
                                     ->label('Bahan Pokok')
                                     ->options(BahanPokok::all()->pluck('nama_bahan', 'id'))
                                     ->required()
-                                    ->columnSpan(3)
+                                    ->live()
+                                    ->afterStateUpdated(function ($state, $set) {
+                                        // Ambil harga produk ketika produk dipilih
+                                        $bahan = BahanPokok::find($state);
+                                        if ($bahan) {
+                                            $set('harga_bahan', $bahan->harga);
+                                        }
+                                    })
+                                    ->columnSpan(2)
                                     ->placeholder('Pilih bahan pokok'),
                                 TextInput::make('jumlah_berat')
                                     ->numeric()
                                     ->required()
                                     ->minValue(0)
-                                    ->columnSpan(2),
+                                    ->columnSpan(1)
+                                    ->live()
+                                    ->afterStateUpdated(function ($state, $set, $get) {
+                                        // Hitung subtotal ketika qty atau harga berubah
+                                        $bahan = $get('bahan_id');
+                                        $bahanPokok = BahanPokok::find($bahan);
+                                        $harga = $bahanPokok->harga / $bahanPokok->jumlah_berat;
+                                        $qty = $state;
+                                        $subtotal = $harga * $qty;
+                                        $set('harga_pokok', $subtotal);
+                                    }),
                                 Select::make('satuan_id')
                                     ->label('Satuan')
                                     ->options(Satuan::all()->pluck('nama_satuan', 'id'))
                                     ->required()
-                                    ->columnSpan(2)
+                                    ->columnSpan(1)
                                     ->placeholder('Pilih satuan'),
+                                TextInput::make('harga_bahan')
+                                    ->label('Harga Bahan')
+                                    ->numeric()
+                                    ->required()
+                                    ->minValue(0)
+                                    ->columnSpan(1)
+                                    ->readonly(),
+                                TextInput::make('harga_pokok')
+                                    ->label('Harga Pokok')
+                                    ->numeric()
+                                    ->required()
+                                    ->minValue(0)
+                                    ->columnSpan(1)
+                                    ->readonly(),
                             ])
                             ->columns(7)
                             ->grid(1)
@@ -95,7 +143,12 @@ class ResepResource extends Resource
                 Tables\Columns\TextColumn::make('produk.nama_produk')
                     ->label('Nama Produk')
                     ->sortable()
-                    ->searchable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('hpp')
+                    ->label('HPP')
+                    ->sortable()
+                    ->prefix('Rp ')
+                    ->numeric(),
             ])
             ->filters([
                 //

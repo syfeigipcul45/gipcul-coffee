@@ -32,6 +32,21 @@ class BahanPokokResource extends Resource
                     ->required()
                     ->maxLength(255)
                     ->label('Nama Bahan Pokok'),
+                Forms\Components\TextInput::make('jumlah_berat')
+                    ->numeric()
+                    ->label('Jumlah Berat')
+                    ->required()
+                    ->placeholder('Masukkan jumlah berat')
+                    ->minValue(0),
+                Forms\Components\Select::make('satuan_id')
+                    ->label('Pilih Satuan')
+                    ->relationship('satuan', 'nama_satuan')
+                    ->required()
+                    ->placeholder('Pilih satuan'),
+                Forms\Components\TextInput::make('harga')
+                    ->required()
+                    ->numeric()
+                    ->label('Harga (Rp)')
             ])->columns(1);
     }
 

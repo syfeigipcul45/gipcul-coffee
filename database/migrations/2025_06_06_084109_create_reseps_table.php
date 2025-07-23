@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('produk_id');
             $table->string('deskripsi');
+            $table->decimal('hpp', 10, 2)->nullable();
             $table->foreign('produk_id')->references('id')->on('produks')->onDelete('cascade');
             $table->timestamps();
         });

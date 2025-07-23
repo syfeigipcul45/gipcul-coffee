@@ -17,6 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('bahan_id');
             $table->integer('jumlah_berat');
             $table->unsignedBigInteger('satuan_id');
+            $table->decimal('harga_bahan', 10, 2)->nullable();
+            $table->decimal('harga_pokok', 10, 2)->nullable();
             $table->foreign('resep_id')->references('id')->on('reseps')->onDelete('cascade');
             $table->foreign('bahan_id')->references('id')->on('bahan_pokoks')->onDelete('cascade');
             $table->foreign('satuan_id')->references('id')->on('satuans')->onDelete('cascade');

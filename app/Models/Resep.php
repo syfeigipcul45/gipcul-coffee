@@ -9,6 +9,7 @@ class Resep extends Model
     protected $fillable = [
         'produk_id',
         'deskripsi',
+        'hpp',
     ];
 
     public function produk()
@@ -20,4 +21,6 @@ class Resep extends Model
     {
         return $this->hasMany(DetailResep::class);
     }
+
+
 }

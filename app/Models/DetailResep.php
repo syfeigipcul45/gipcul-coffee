@@ -11,6 +11,8 @@ class DetailResep extends Model
         'bahan_id',
         'jumlah_berat',
         'satuan_id',
+        'harga_bahan',
+        'harga_pokok',
     ];
 
     public function resep()

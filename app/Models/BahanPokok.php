@@ -10,5 +10,13 @@ class BahanPokok extends Model
 
     protected $fillable = [
         'nama_bahan',
+        'jumlah_berat',
+        'satuan_id',
+        'harga',
     ];
+
+    public function satuan()
+    {
+        return $this->belongsTo(Satuan::class, 'satuan_id');
+    }
 }
