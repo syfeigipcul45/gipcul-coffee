@@ -17,6 +17,8 @@ return new class extends Migration
             $table->date('tanggal_beli');
             $table->bigInteger('total_harga');
             $table->string('jenis_pembayaran')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

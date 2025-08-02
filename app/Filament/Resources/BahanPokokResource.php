@@ -62,6 +62,7 @@ class BahanPokokResource extends Resource
                     ->sortable()
                     ->searchable(),
             ])
+            ->defaultSort('nama_bahan', 'asc')
             ->filters([
                 //
             ])

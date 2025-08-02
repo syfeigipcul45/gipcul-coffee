@@ -13,6 +13,7 @@ class Penjualan extends Model
         'tanggal_beli',
         'total_harga',
         'jenis_pembayaran',
+        'user_id',
     ];
 
     public function detailPenjualans()
@@ -29,8 +30,14 @@ class Penjualan extends Model
     {
         return $this->belongsTo(Produk::class, 'produk_id');
     }
+
     public function scopeFilterByProduk($query, $produkId)
     {
         return $query->where('produk_id', $produkId);
+    }
+    
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

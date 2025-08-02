@@ -14,8 +14,8 @@ class HomepageController extends Controller
      */
     public function index()
     {
-        $data['coffees'] = Produk::where('kategori', 'kopi')->get();
-        $data['nonCoffees'] = Produk::where('kategori', '!=', 'kopi')->get();
+        $data['coffees'] = Produk::where('kategori', 'kopi')->orderBy('nama_produk', 'asc')->get();
+        $data['nonCoffees'] = Produk::where('kategori', '!=', 'kopi')->orderBy('nama_produk', 'asc')->get();
         return view('homepage.menu', $data);
     }
 

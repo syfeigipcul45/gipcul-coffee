@@ -81,11 +81,14 @@ class ProdukResource extends Resource
                     ->searchable()
                     ->label('Harga (Rp)')
                     ->formatStateUsing(fn($state) => number_format($state, 0, ',', '.')),
-                TextColumn::make('kategori'),
+                TextColumn::make('kategori')
+                ->sortable(),
                 TextColumn::make('deskripsi')
                     ->limit(50)
                     ->label('Deskripsi')
-            ])->filters([
+            ])
+            ->defaultSort('nama_produk', 'asc')
+            ->filters([
                 SelectFilter::make('kategori')
                     ->label('Filter Kategori')
                     ->options([

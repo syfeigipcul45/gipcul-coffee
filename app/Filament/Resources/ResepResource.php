@@ -25,7 +25,6 @@ class ResepResource extends Resource
 {
     protected static ?string $model = Resep::class;
 
-
     protected static ?string $navigationLabel = 'Resep Minuman';
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
     protected static ?string $navigationGroup = 'Inventory';
@@ -73,7 +72,7 @@ class ResepResource extends Resource
                             ->schema([
                                 Select::make('bahan_id')
                                     ->label('Bahan Pokok')
-                                    ->options(BahanPokok::all()->pluck('nama_bahan', 'id'))
+                                    ->options(BahanPokok::orderBy('nama_bahan', 'asc')->pluck('nama_bahan', 'id'))
                                     ->required()
                                     ->live()
                                     ->afterStateUpdated(function ($state, $set) {
@@ -150,6 +149,7 @@ class ResepResource extends Resource
                     ->prefix('Rp ')
                     ->numeric(),
             ])
+            ->defaultSort('produk.nama_produk', 'asc')
             ->filters([
                 //
             ])

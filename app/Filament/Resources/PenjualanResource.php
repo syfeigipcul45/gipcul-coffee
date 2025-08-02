@@ -8,6 +8,7 @@ use App\Models\Produk;
 use DateTime;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -17,6 +18,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class PenjualanResource extends Resource
 {
@@ -57,7 +59,14 @@ class PenjualanResource extends Resource
                                 'qris' => 'QRIS',
                                 'transfer' => 'Transfer',
                             ])
-                            ->placeholder('Pilih jenis pembayaran')
+                            ->placeholder('Pilih jenis pembayaran'),
+                        TextInput::make('kasir')
+                            ->default(Auth::user()->name)
+                            ->readonly()
+                            ->label('Kasir')
+                            ->dehydrated(false), // Jangan simpan ke database,
+                        Hidden::make('user_id')
+                            ->default(Auth::user()->id)
                     ]),
                 Section::make('Detail Penjualan')
                     ->schema([
@@ -160,7 +169,12 @@ class PenjualanResource extends Resource
                     ->money('idr')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('detail_penjualans_count')
-                    ->label('Jumlah Produk')
+                    ->label('Jumlah Produk'),
+                Tables\Columns\TextColumn::make('jenis_pembayaran')
+                    ->label('Jenis Pembayaran'),
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('Kasir')
+                    ->sortable(),
             ])->filters([
                 //
             ])

@@ -133,6 +133,7 @@ class PembelianBahanResource extends Resource
                 Tables\Columns\TextColumn::make('detail_pembelians_count')
                     ->label('Jumlah Bahan')
             ])
+            ->defaultSort('tanggal_beli', 'desc')
             ->filters([
                 //
             ])
