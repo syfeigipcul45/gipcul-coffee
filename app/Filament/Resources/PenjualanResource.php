@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PenjualanResource\Pages;
+use App\Models\DetailPenjualan;
 use App\Models\Penjualan;
 use App\Models\Produk;
 use DateTime;
@@ -149,7 +150,8 @@ class PenjualanResource extends Resource
     {
         return $table
             ->query(
-                Penjualan::query()->withCount('detailPenjualans')
+                // PENTING: Tambahkan withSum di query
+                static::getEloquentQuery()->withSum('detailPenjualans', 'qty')
             )
             ->columns([
                 Tables\Columns\TextColumn::make('index')
@@ -168,7 +170,7 @@ class PenjualanResource extends Resource
                     ->label('Total Harga')
                     ->money('idr')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('detail_penjualans_count')
+                Tables\Columns\TextColumn::make('detail_penjualans_sum_qty')
                     ->label('Jumlah Produk'),
                 Tables\Columns\TextColumn::make('jenis_pembayaran')
                     ->label('Jenis Pembayaran'),

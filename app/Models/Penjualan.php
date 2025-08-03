@@ -21,10 +21,10 @@ class Penjualan extends Model
         return $this->hasMany(DetailPenjualan::class);
     }
 
-    // public function detailPenjualansCount()
-    // {
-    //     return $this->detailPenjualans()->sum('qty');
-    // }
+    public function detailPenjualansCount()
+    {
+        return $this->detailPenjualans()->sum('qty');
+    }
 
     public function produk()
     {
@@ -35,7 +35,7 @@ class Penjualan extends Model
     {
         return $query->where('produk_id', $produkId);
     }
-    
+
     public function user()
     {
         return $this->belongsTo(User::class);
