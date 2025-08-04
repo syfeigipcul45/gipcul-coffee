@@ -151,7 +151,7 @@ class PenjualanResource extends Resource
         return $table
             ->query(
                 // PENTING: Tambahkan withSum di query
-                static::getEloquentQuery()->withSum('detailPenjualans', 'qty')
+                Penjualan::query()->withSum('detailPenjualans', 'qty')
             )
             ->columns([
                 Tables\Columns\TextColumn::make('index')
@@ -177,9 +177,8 @@ class PenjualanResource extends Resource
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Kasir')
                     ->sortable(),
-            ])->filters([
-                //
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 //
             ])
