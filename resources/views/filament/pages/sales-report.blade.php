@@ -18,6 +18,17 @@
                 </div>
             </div>
 
+            {{-- Produk Chart --}}
+            <div class="filament-forms-card-component p-6 bg-white rounded-xl shadow">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                    Grafik Produk Harian -
+                    {{ \Carbon\Carbon::create($this->getCurrentYear(), $this->getCurrentMonth(), 1)->translatedFormat('F Y') }}
+                </h3>
+                <div class="chart-container" style="position: relative; height:400px; width:100%">
+                    <canvas id="productChart"></canvas>
+                </div>
+            </div>
+
             {{-- Top Products Chart --}}
             <div class="filament-forms-card-component p-6 bg-white rounded-xl shadow">
                 <h3 class="text-lg font-semibold text-gray-800 mb-4">
@@ -35,7 +46,7 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
             // Chart instances
-            let salesChart, topProductsChart;
+            let salesChart, productChart, topProductsChart;
             var internalData = [300, 50, 100, 75];
 
             var graphColors = [];
@@ -89,9 +100,11 @@
             function initCharts() {
                 const salesData = parseChartData(@json($this->getSalesData()));
                 const topProductsData = parseChartData(@json($this->getTopProductsData()));
+                const productData = parseChartData(@json($this->getSumQty()));
 
                 renderSalesChart(salesData);
                 renderTopProductsChart(topProductsData);
+                renderProductChart(productData);
             }
 
             // Render sales chart
@@ -140,6 +153,60 @@
                                 ticks: {
                                     callback: function(value) {
                                         return 'Rp ' + value.toLocaleString('id-ID');
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Product sales chart
+            function renderProductChart(data) {
+                const ctx = document.getElementById('productChart')?.getContext('2d');
+                if (!ctx) return;
+
+                // Validate data structure
+                if (!Array.isArray(data?.labels) || !Array.isArray(data?.data)) {
+                    console.error('Invalid sales data format:', data);
+                    return;
+                }
+
+                if (productChart) {
+                    productChart.destroy();
+                }
+
+                productChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Total Product',
+                            data: data.data,
+                            backgroundColor: graphColors,
+                            borderColor: graphOutlines,
+                            hoverBackgroundColor: hoverColor,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return + context.raw.toLocaleString('id-ID');
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return + value.toLocaleString('id-ID');
                                     }
                                 }
                             }

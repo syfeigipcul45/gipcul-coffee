@@ -103,12 +103,47 @@ class SalesReport extends Page
         $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 
         // Pastikan labels dan data selalu berupa array
-        $labels = array_map(fn($i) => "Hari " . ($i + 1), range(0, $daysInMonth - 1));
+        $labels = array_map(fn($i) => "Tanggal " . ($i + 1), range(0, $daysInMonth - 1));
         $data = array_fill(0, $daysInMonth, 0);
 
         foreach ($sales as $sale) {
             if ($sale->day >= 1 && $sale->day <= $daysInMonth) {
                 $data[$sale->day - 1] = (float)$sale->total_sales;
+            }
+        }
+
+        return [
+            'labels' => $labels,
+            'data' => $data,
+        ];
+    }
+
+    public function getSumQty(): array
+    {
+        $month = $this->getCurrentMonth();
+        $year = $this->getCurrentYear();
+
+        $sumQty = DetailPenjualan::query()
+            ->select(
+                DB::raw('DAY(penjualans.tanggal_beli) as day'),
+                DB::raw('SUM(detail_penjualans.qty) as total_quantity_sold')
+            )
+            ->join('penjualans', 'detail_penjualans.penjualan_id', '=', 'penjualans.id')
+            ->whereYear('penjualans.tanggal_beli', $year)
+            ->whereMonth('penjualans.tanggal_beli', $month)
+            ->groupBy('day')
+            ->orderBy('day')
+            ->get();
+
+        $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+
+        // Pastikan labels dan data selalu berupa array
+        $labels = array_map(fn($i) => "Tanggal " . ($i + 1), range(0, $daysInMonth - 1));
+        $data = array_fill(0, $daysInMonth, 0);
+
+        foreach ($sumQty as $sale) {
+            if ($sale->day >= 1 && $sale->day <= $daysInMonth) {
+                $data[$sale->day - 1] = (float)$sale->total_quantity_sold;
             }
         }
 
